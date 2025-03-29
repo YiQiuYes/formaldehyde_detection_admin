@@ -91,7 +91,7 @@ jobs:
           submodules: recursive
       - name: 修改版本号
         run: |
-          sed -i "s/version: .*/version: ${{ env.version }}+1/" pubspec.yaml
+          sed -i "" "s/version: .*/version: ${{ env.version }}+1/" pubspec.yaml
       - name: Build (ios)
         run: |
           flutter pub get
