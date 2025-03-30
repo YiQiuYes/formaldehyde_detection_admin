@@ -1,0 +1,13 @@
+import 'package:formaldehyde_detection/pages/home/view.dart';
+import 'package:formaldehyde_detection/pages/login/view.dart';
+import 'package:get/get_navigation/src/routes/get_route.dart';
+
+class RouteConfig {
+  static const String home = "/home";
+  static const String login = "/login";
+
+  static final List<GetPage> getPages = [
+    GetPage(name: home, page: () => HomePage()),
+    GetPage(name: login, page: () => LoginPage()),
+  ];
+}
