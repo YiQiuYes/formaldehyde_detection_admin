@@ -1,7 +1,7 @@
 import 'package:logger/logger.dart';
 
 class LoggerUtil {
-  static final logger = Logger(
+  static final _logger = Logger(
     printer: PrettyPrinter(
       methodCount: 2,
       errorMethodCount: 8,
@@ -18,7 +18,7 @@ class LoggerUtil {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    logger.d(message, time: time, error: error, stackTrace: stackTrace);
+    _logger.d(message, time: time, error: error, stackTrace: stackTrace);
   }
 
   static void e(
@@ -27,7 +27,7 @@ class LoggerUtil {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    logger.e(message, time: time, error: error, stackTrace: stackTrace);
+    _logger.e(message, time: time, error: error, stackTrace: stackTrace);
   }
 
   static void w(
@@ -36,7 +36,7 @@ class LoggerUtil {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    logger.w(message, time: time, error: error, stackTrace: stackTrace);
+    _logger.w(message, time: time, error: error, stackTrace: stackTrace);
   }
 
   static void i(
@@ -45,7 +45,7 @@ class LoggerUtil {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    logger.i(message, time: time, error: error, stackTrace: stackTrace);
+    _logger.i(message, time: time, error: error, stackTrace: stackTrace);
   }
 
   static void f(
@@ -54,7 +54,7 @@ class LoggerUtil {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    logger.f(message, time: time, error: error, stackTrace: stackTrace);
+    _logger.f(message, time: time, error: error, stackTrace: stackTrace);
   }
 
   static void t(
@@ -63,6 +63,6 @@ class LoggerUtil {
     Object? error,
     StackTrace? stackTrace,
   }) {
-    logger.t(message, time: time, error: error, stackTrace: stackTrace);
+    _logger.t(message, time: time, error: error, stackTrace: stackTrace);
   }
 }
