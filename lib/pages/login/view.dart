@@ -26,7 +26,7 @@ class LoginPage extends StatelessWidget {
           ),
           // 用户名输入框
           Padding(
-            padding: const EdgeInsets.only(top: 40, left: 30, right: 30),
+            padding: const EdgeInsets.only(top: 70, left: 30, right: 30),
             child: TextField(
               controller: state.usernameController,
               decoration: InputDecoration(
@@ -57,7 +57,7 @@ class LoginPage extends StatelessWidget {
             child: FloatingActionButton(
               onPressed: () {
                 // 登录逻辑
-                logic.login(context);
+                logic.login();
               },
               child: Text('登录', style: TextStyle(fontSize: 17)),
             ),
