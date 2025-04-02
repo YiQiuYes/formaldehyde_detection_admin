@@ -6,9 +6,6 @@ import '../state/global_logic.dart';
 
 class AuthMiddleware extends GetMiddleware {
   @override
-  int? priority = 0;
-
-  @override
   RouteSettings? redirect(String? route) {
     final logic = Get.find<GlobalLogic>();
 
