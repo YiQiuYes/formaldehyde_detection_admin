@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formaldehyde_detection/entity/device_entity.dart';
 import 'package:formaldehyde_detection/pages/route_config.dart';
 import 'package:formaldehyde_detection/state/global_logic.dart';
+import 'package:formaldehyde_detection/utils/toast_util.dart';
 import 'package:get/get.dart';
 
 import 'logic.dart';
@@ -44,6 +45,10 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
           ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showRegisterDialog,
+        child: const Icon(Icons.add),
+      ),
       body: GetBuilder<GlobalLogic>(
         builder: (logic) {
           return ListView.builder(
@@ -65,7 +70,7 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
         // 跳转到设备详情页面
         Get.toNamed(RouteConfig.deviceDetail, arguments: device);
       },
-      onLongPress: () => _showDeleteDialog(device),  // 添加长按事件
+      onLongPress: () => _showDeleteDialog(device), // 添加长按事件
       borderRadius: BorderRadius.circular(12),
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -146,19 +151,123 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
         title: const Text('删除设备'),
         content: Text('确定要删除设备 ${device.address} 吗？'),
         actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: const Text('取消'),
-          ),
+          TextButton(onPressed: () => Get.back(), child: const Text('取消')),
           TextButton(
             onPressed: () {
               Get.back();
-              logic.deleteDevice(device.userId, device.databaseName);  // 调用删除逻辑
+              logic.deleteDevice(device.userId, device.databaseName); // 调用删除逻辑
             },
             child: const Text('删除', style: TextStyle(color: Colors.red)),
           ),
         ],
-      )
+      ),
+    );
+  }
+
+  // 新增设备注册对话框
+  Future<void> _showRegisterDialog() async {
+    final formKey = GlobalKey<FormState>();
+    String userId = '';
+    String password = '';
+    String? selectedAuthenticator; // 改为存储选中值
+    RxBool isSuperuser = false.obs;
+    String address = '';
+
+    // 初始化加载认证器列表
+    await logic.loadAuthenticators();
+
+    if (state.authenticators.isEmpty) {
+      ToastUtil.errorToastNoContent('未找到可用的认证器');
+      return;
+    }
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('注册新设备'),
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(labelText: '用户ID'),
+                  onSaved: (v) => userId = v ?? '',
+                  validator: (v) => v?.isEmpty ?? true ? '必填字段' : null,
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: '密码'),
+                  obscureText: true,
+                  onSaved: (v) => password = v ?? '',
+                  validator: (v) => v?.isEmpty ?? true ? '必填字段' : null,
+                ),
+                Obx(() {
+                  if (state.authenticators.isEmpty) {
+                    return const CircularProgressIndicator();
+                  }
+                  return DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(labelText: '认证器'),
+                    borderRadius: BorderRadius.circular(12),
+                    value: selectedAuthenticator,
+                    items:
+                        state.authenticators.map((authenticator) {
+                          return DropdownMenuItem(
+                            value: authenticator,
+                            child: Text(authenticator),
+                          );
+                        }).toList(),
+                    onChanged: (value) => selectedAuthenticator = value,
+                    validator: (v) => v == null ? '请选择认证器' : null,
+                  );
+                }),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: '设备地址'),
+                  onSaved: (v) => address = v ?? '',
+                  validator: (v) => v?.isEmpty ?? true ? '必填字段' : null,
+                ),
+                Row(
+                  children: [
+                    const Text('超级用户'),
+                    Obx(
+                      () => Checkbox(
+                        value: isSuperuser.value,
+                        onChanged: (v) => isSuperuser.value = v ?? false,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: Get.back, child: const Text('取消')),
+          TextButton(
+            onPressed: () async {
+              if (selectedAuthenticator == null) {
+                ToastUtil.errorToastNoContent('请选择认证器');
+                return;
+              }
+
+              if (formKey.currentState?.validate() ?? false) {
+                formKey.currentState?.save();
+                final success = await logic.registerDevice(
+                  userId: userId,
+                  password: password,
+                  authenticator: selectedAuthenticator!,
+                  isSuperuser: isSuperuser.value,
+                  address: address,
+                );
+                if (success) {
+                  Get.back();
+                  logic.loadDevices(); // 刷新设备列表
+                }
+              }
+            },
+            child: const Text('注册'),
+          ),
+        ],
+      ),
     );
   }
 }

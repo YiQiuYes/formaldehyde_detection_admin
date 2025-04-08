@@ -86,4 +86,34 @@ class DeviceManagerLogic extends GetxController {
       ToastUtil.errorToastNoContent('删除设备时发生错误');
     }
   }
+
+  Future<bool> registerDevice({
+    required String userId,
+    required String password,
+    required String authenticator,
+    required bool isSuperuser,
+    required String address,
+  }) async {
+    final success = await clientApi.registerClient(
+      userId: userId,
+      password: password,
+      authenticator: authenticator,
+      isSuperuser: isSuperuser,
+      address: address,
+    );
+
+    if (success) {
+      ToastUtil.okToastNoContent('设备注册成功');
+      return true;
+    } else {
+      ToastUtil.errorToastNoContent('设备注册失败');
+    }
+    return false;
+  }
+
+  Future<void> loadAuthenticators() async {
+    final result = await clientApi.getAuthenticators();
+    state.authenticators.value = result;
+    update();
+  }
 }

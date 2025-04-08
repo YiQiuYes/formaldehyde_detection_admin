@@ -76,4 +76,54 @@ class ClientApi {
           }
         });
   }
+
+  /// 客户端注册
+  /// [userId] 用户ID
+  /// [password] 密码
+  /// [authenticator] 认证器
+  /// [isSuperuser] 是否为超级用户
+  /// [address] 地址
+  /// [return] 是否注册成功
+  Future<bool> registerClient({
+    required String userId,
+    required String password,
+    required String authenticator,
+    required bool isSuperuser,
+    required String address,
+  }) async {
+    Map<String, dynamic> data = {
+      "username": userId,
+      "password": password,
+      "authenticator": authenticator,
+      "isSuperuser": isSuperuser,
+      "address": address,
+    };
+
+    return await _request
+        .post("/auth/createUserToAuthenticator", data: data)
+        .then((value) {
+          final data = value.data;
+          if (data["code"] == 200) {
+            return true;
+          } else {
+            LoggerUtil.e("客户端注册失败");
+            return false;
+          }
+        });
+  }
+
+  Future<List<String>> getAuthenticators() {
+    return _request.get("/auth/authenticators").then((value) {
+      final data = value.data;
+      List<String> list = [];
+      if (data["code"] == 200) {
+        for (var item in data["data"]) {
+          list.add(item["id"]);
+        }
+      } else {
+        LoggerUtil.e("获取认证器列表失败");
+      }
+      return list;
+    });
+  }
 }
