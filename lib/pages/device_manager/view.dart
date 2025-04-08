@@ -61,7 +61,7 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
     return InkWell(
       onTap: () {
         // 跳转到设备详情页面
-        Get.toNamed(RouteConfig.deviceDetail);
+        Get.toNamed(RouteConfig.deviceDetail, arguments: device);
       },
       borderRadius: BorderRadius.circular(12),
       child: Card(

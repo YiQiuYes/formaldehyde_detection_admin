@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:formaldehyde_detection/entity/ch2o_record_entity.dart';
 import 'package:formaldehyde_detection/pages/device_manager/state.dart';
 import 'package:formaldehyde_detection/state/global_logic.dart';
-import 'package:formaldehyde_detection/utils/logger_util.dart';
 import 'package:formaldehyde_detection/utils/websocket_util.dart';
 import 'package:get/get.dart';
 

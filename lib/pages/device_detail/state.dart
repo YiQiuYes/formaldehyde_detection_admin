@@ -1,9 +1,12 @@
+import 'package:formaldehyde_detection/entity/ch2o_today_statistic_entity.dart';
+import 'package:get/get.dart';
+
 class DeviceDetailState {
-  double currentFormaldehydeLevel = 0.15; // 当前甲醛浓度值
-  double maxLevelToday = 0.18; // 今日最高浓度
-  double avgLevelToday = 0.12; // 今日平均浓度
-  double minLevelToday = 0.08; // 今日最低浓度
-  
+  Rx<Ch2oTodayStatisticEntity> ch2oTodayStatistic =
+      Rx<Ch2oTodayStatisticEntity>(
+        Ch2oTodayStatisticEntity(max: 0, min: 0, avg: 0),
+      );
+
   DeviceDetailState() {
     ///Initialize variables
   }

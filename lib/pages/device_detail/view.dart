@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:formaldehyde_detection/entity/device_entity.dart';
+import 'package:formaldehyde_detection/state/global_logic.dart';
 import 'package:get/get.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
@@ -11,8 +13,12 @@ class DeviceDetailPage extends StatelessWidget {
   final DeviceDetailLogic logic = Get.put(DeviceDetailLogic());
   final DeviceDetailState state = Get.find<DeviceDetailLogic>().state;
 
+  final DeviceEntity device = Get.arguments as DeviceEntity;
+
   @override
   Widget build(BuildContext context) {
+    logic.loadTodayStatistics(device.clientId!);
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -43,54 +49,74 @@ class DeviceDetailPage extends StatelessWidget {
                     const SizedBox(height: 16),
                     SizedBox(
                       height: 250,
-                      child: SfRadialGauge(
-                        axes: [
-                          RadialAxis(
-                            minimum: 0,
-                            maximum: 0.5,
-                            interval: 0.1,
-                            ranges: [
-                              GaugeRange(
-                                startValue: 0,
-                                endValue: 0.08,
-                                color: Colors.green,
-                              ),
-                              GaugeRange(
-                                startValue: 0.08,
-                                endValue: 0.2,
-                                color: Colors.orange,
-                              ),
-                              GaugeRange(
-                                startValue: 0.2,
-                                endValue: 0.5,
-                                color: Colors.red,
+                      child: GetBuilder<GlobalLogic>(
+                        builder: (globalLogic) {
+                          final concentration = logic
+                              .getFormaldehydeConcentration(
+                                device,
+                                globalLogic.state.devices,
+                              );
+                          return SfRadialGauge(
+                            enableLoadingAnimation: true,
+                            axes: [
+                              RadialAxis(
+                                minimum: 0,
+                                maximum: 500,
+                                interval: 100,
+                                ranges: [
+                                  GaugeRange(
+                                    startValue: 0,
+                                    endValue: 200,
+                                    color: Colors.green,
+                                  ),
+                                  GaugeRange(
+                                    startValue: 200,
+                                    endValue: 400,
+                                    color: Colors.orange,
+                                  ),
+                                  GaugeRange(
+                                    startValue: 400,
+                                    endValue: 500,
+                                    color: Colors.red,
+                                  ),
+                                ],
+                                pointers: [
+                                  NeedlePointer(
+                                    value: concentration,
+                                    enableAnimation: true,
+                                  ),
+                                ],
+                                annotations: [
+                                  GaugeAnnotation(
+                                    widget: Text(
+                                      concentration.toStringAsFixed(2),
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.headlineMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    angle: 85,
+                                    positionFactor: 0.5,
+                                  ),
+                                ],
                               ),
                             ],
-                            pointers: [
-                              NeedlePointer(
-                                value: 0.15, // 示例数据，实际替换为您的数据
-                                enableAnimation: true,
-                              ),
-                            ],
-                            annotations: [
-                              GaugeAnnotation(
-                                widget: Text(
-                                  '0.15',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headlineMedium
-                                      ?.copyWith(fontWeight: FontWeight.bold),
-                                ),
-                                angle: 85,
-                                positionFactor: 0.5,
-                              ),
-                            ],
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(height: 16),
-                    _buildStatusIndicator(context),
+                    GetBuilder<GlobalLogic>(
+                      builder: (globalLogic) {
+                        final concentration = logic
+                            .getFormaldehydeConcentration(
+                              device,
+                              globalLogic.state.devices,
+                            );
+                        return _buildStatusIndicator(context, concentration);
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -121,31 +147,38 @@ class DeviceDetailPage extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildStatItem(
-                          context,
-                          '最高浓度',
-                          '0.18',
-                          Icons.arrow_upward,
-                          Colors.red,
-                        ),
-                        _buildStatItem(
-                          context,
-                          '平均浓度',
-                          '0.12',
-                          Icons.trending_flat,
-                          Colors.orange,
-                        ),
-                        _buildStatItem(
-                          context,
-                          '最低浓度',
-                          '0.08',
-                          Icons.arrow_downward,
-                          Colors.green,
-                        ),
-                      ],
+                    GetBuilder<DeviceDetailLogic>(
+                      builder: (logic) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildStatItem(
+                              context,
+                              '最高浓度',
+                              state.ch2oTodayStatistic.value.max
+                                  .toStringAsFixed(2),
+                              Icons.arrow_upward,
+                              Colors.red,
+                            ),
+                            _buildStatItem(
+                              context,
+                              '平均浓度',
+                              state.ch2oTodayStatistic.value.avg
+                                  .toStringAsFixed(2),
+                              Icons.trending_flat,
+                              Colors.orange,
+                            ),
+                            _buildStatItem(
+                              context,
+                              '最低浓度',
+                              state.ch2oTodayStatistic.value.min
+                                  .toStringAsFixed(2),
+                              Icons.arrow_downward,
+                              Colors.green,
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -157,11 +190,27 @@ class DeviceDetailPage extends StatelessWidget {
     );
   }
 
-    /// 构建状态指示器
+  /// 构建状态指示器
   ///
   /// [context] 上下文
   /// [return] 状态指示器
-  Widget _buildStatusIndicator(BuildContext context) {
+  Widget _buildStatusIndicator(BuildContext context, double concentration) {
+    String tip = '良好';
+    Color color = Colors.green;
+    if (concentration > 400) {
+      tip = '重度污染';
+      color = Colors.red;
+    } else if (concentration > 300) {
+      tip = '中度污染';
+      color = Colors.orange;
+    } else if (concentration > 200) {
+      tip = '轻度污染';
+      color = Colors.limeAccent;
+    } else {
+      tip = '空气良好';
+      color = Colors.green;
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -169,15 +218,15 @@ class DeviceDetailPage extends StatelessWidget {
           width: 12,
           height: 12,
           decoration: BoxDecoration(
-            color: Colors.orange,
+            color: color,
             borderRadius: BorderRadius.circular(6),
           ),
         ),
         const SizedBox(width: 8),
         Text(
-          '轻度污染',
+          tip,
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: Colors.orange,
+            color: color,
             fontWeight: FontWeight.bold,
           ),
         ),

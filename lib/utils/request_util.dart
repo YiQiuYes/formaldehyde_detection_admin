@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:formaldehyde_detection/state/global_logic.dart';
+import 'package:formaldehyde_detection/utils/logger_util.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 
@@ -39,7 +40,12 @@ class RequestUtil {
       );
       return response;
     } catch (e) {
-      throw Exception("请求失败: $e");
+      LoggerUtil.e("请求失败: $e");
+      return Response(
+        data: {"code": 500, "msg": "请求失败: $e"},
+        statusCode: 200,
+        requestOptions: RequestOptions(path: url), 
+      );
     }
   }
 
