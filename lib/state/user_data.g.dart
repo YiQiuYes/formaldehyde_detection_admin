@@ -7,9 +7,9 @@ part of 'user_data.dart';
 // **************************************************************************
 
 UserData _$UserDataFromJson(Map<String, dynamic> json) => UserData(
+  isLogin: json['isLogin'] as bool? ?? false,
   token: json['token'] as String?,
   refreshToken: json['refreshToken'] as String?,
-  isLogin: json['isLogin'] as bool? ?? false,
 );
 
 Map<String, dynamic> _$UserDataToJson(UserData instance) => <String, dynamic>{

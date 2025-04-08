@@ -13,14 +13,12 @@ class ClientApi {
 
   final _request = RequestUtil();
 
-  Future<List<ClientEntity>> clientList({int? page, int? limit}) async {
-    Map<String, dynamic> params = {"page": page ?? 1, "limit": limit ?? 100};
-
-    return await _request.get("/client/list", params: params).then((value) {
+  Future<List<ClientEntity>> clientALLList({int? page, int? limit}) async {
+    return await _request.get("/client/allList").then((value) {
       final data = value.data;
       List<ClientEntity> list = [];
       if (data["code"] == 200) {
-        for (var item in data["data"]["list"]) {
+        for (var item in data["data"]) {
           list.add(ClientEntity.fromJson(item));
         }
       } else {

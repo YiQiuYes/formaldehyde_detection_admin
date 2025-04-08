@@ -7,14 +7,18 @@ part of 'client_entity.dart';
 // **************************************************************************
 
 ClientEntity _$ClientEntityFromJson(Map<String, dynamic> json) => ClientEntity(
-  username: json['username'] as String,
-  ipAddress: json['ip_address'] as String,
-  clientId: json['clientid'] as String,
+  clientId: (json['clientId'] as num?)?.toInt(),
+  userId: json['userId'] as String,
+  address: json['address'] as String?,
+  isSuperuser: json['isSuperuser'] as bool,
+  connected: json['connected'] as bool,
 );
 
 Map<String, dynamic> _$ClientEntityToJson(ClientEntity instance) =>
     <String, dynamic>{
-      'username': instance.username,
-      'ip_address': instance.ipAddress,
-      'clientid': instance.clientId,
+      'clientId': instance.clientId,
+      'userId': instance.userId,
+      'address': instance.address,
+      'isSuperuser': instance.isSuperuser,
+      'connected': instance.connected,
     };

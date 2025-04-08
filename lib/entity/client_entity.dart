@@ -3,17 +3,23 @@ part 'client_entity.g.dart';
 
 @JsonSerializable()
 class ClientEntity {
-  @JsonKey(name: 'username')
-  String username;
-  @JsonKey(name: "ip_address")
-  String ipAddress;
-  @JsonKey(name: "clientid")
-  String clientId;
+  @JsonKey(name: "clientId")
+  int? clientId;
+  @JsonKey(name: 'userId')
+  String userId;
+  @JsonKey(name: "address")
+  String? address;
+  @JsonKey(name: "isSuperuser")
+  bool isSuperuser;
+  @JsonKey(name: "connected")
+  bool connected;
 
   ClientEntity({
-    required this.username,
-    required this.ipAddress,
-    required this.clientId,
+    this.clientId,
+    required this.userId,
+    this.address,
+    required this.isSuperuser,
+    required this.connected,
   });
 
   factory ClientEntity.fromJson(Map<String, dynamic> json) => _$ClientEntityFromJson(json);
