@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:formaldehyde_detection/api/client_api.dart';
 import 'package:formaldehyde_detection/entity/ch2o_record_entity.dart';
+import 'package:formaldehyde_detection/entity/device_entity.dart';
 import 'package:formaldehyde_detection/pages/device_manager/state.dart';
 import 'package:formaldehyde_detection/state/global_logic.dart';
 import 'package:formaldehyde_detection/utils/toast_util.dart';
@@ -115,5 +116,26 @@ class DeviceManagerLogic extends GetxController {
     final result = await clientApi.getAuthenticators();
     state.authenticators.value = result;
     update();
+  }
+
+  Future<bool> updateDevice(
+    DeviceEntity device, {
+    required String newAddress,
+    required bool newIsSuperuser,
+    required String newPassword,
+  }) async {
+    final success = await clientApi.updateDevice(
+      authenticator: device.databaseName,
+      username: device.userId,
+      newAddress: newAddress,
+      newIsSuperuser: newIsSuperuser,
+      newPassword: newPassword,
+    );
+
+    if (success) {
+      ToastUtil.okToastNoContent('设备信息已更新');
+      return true;
+    }
+    return false;
   }
 }

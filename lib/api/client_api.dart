@@ -126,4 +126,31 @@ class ClientApi {
       return list;
     });
   }
+
+  /// 更新设备
+  /// [clientId] 客户端ID
+  /// [newAddress] 新地址
+  /// [newIsSuperuser] 新是否为超级用户
+  /// [return] 是否更新成功
+  Future<bool> updateDevice({
+    required String authenticator,
+    required String username,
+    required String newAddress,
+    required bool newIsSuperuser,
+    required String newPassword,
+  }) async {
+    Map<String, dynamic> data = {
+      "authenticator": authenticator,
+      "username": username,
+      "password": newPassword,
+      "isSuperuser": newIsSuperuser,
+      "address": newAddress,
+    };
+    return await _request
+        .post("/auth/updateUserToAuthenticator", data: data)
+        .then((value) {
+          final data = value.data;
+          return data["code"] == 200;
+        });
+  }
 }

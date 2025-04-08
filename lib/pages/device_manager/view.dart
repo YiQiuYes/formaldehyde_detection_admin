@@ -70,7 +70,7 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
         // 跳转到设备详情页面
         Get.toNamed(RouteConfig.deviceDetail, arguments: device);
       },
-      onLongPress: () => _showDeleteDialog(device), // 添加长按事件
+      onLongPress: () => _showActionDialog(device), // 修改长按事件处理
       borderRadius: BorderRadius.circular(12),
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -265,6 +265,101 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
               }
             },
             child: const Text('注册'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 新增操作选择对话框
+  void _showActionDialog(DeviceEntity device) {
+    Get.dialog(
+      AlertDialog(
+        title: Text('设备操作 - ${device.address}'),
+        content: const Text('请选择要执行的操作'),
+        actions: [
+          // 取消
+          TextButton(onPressed: () => Get.back(), child: const Text('取消')),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              _showUpdateDialog(device); // 打开修改对话框
+            },
+            child: const Text('修改信息'),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              _showDeleteDialog(device); // 原有删除逻辑
+            },
+            child: const Text('删除设备', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 新增设备修改对话框
+  void _showUpdateDialog(DeviceEntity device) {
+    final formKey = GlobalKey<FormState>();
+    String address = device.address ?? '';
+    RxBool isSuperuser = device.isSuperuser.obs;
+    String password = '';
+
+    Get.dialog(
+      AlertDialog(
+        title: const Text('修改设备信息'),
+        content: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  decoration: const InputDecoration(labelText: '密码'),
+                  obscureText: true,
+                  onSaved: (v) => password = v ?? '',
+                  validator: (v) => v?.isEmpty ?? true ? '必填字段' : null,
+                ),
+                TextFormField(
+                  initialValue: address,
+                  decoration: const InputDecoration(labelText: '设备地址'),
+                  onSaved: (v) => address = v ?? '',
+                  validator: (v) => v?.isEmpty ?? true ? '必填字段' : null,
+                ),
+                Obx(
+                  () => CheckboxListTile(
+                    title: const Text('超级用户'),
+                    value: isSuperuser.value,
+                    onChanged: (v) => isSuperuser.value = v ?? false,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(onPressed: Get.back, child: const Text('取消')),
+          TextButton(
+            onPressed: () async {
+              if (formKey.currentState?.validate() ?? false) {
+                formKey.currentState?.save();
+                final success = await logic.updateDevice(
+                  device,
+                  newAddress: address,
+                  newIsSuperuser: isSuperuser.value,
+                  newPassword: password,
+                );
+                if (success) {
+                  Get.back();
+                  ToastUtil.okToastNoContent('设备信息已更新');
+                  logic.loadDevices();
+                } else {
+                  ToastUtil.okToastNoContent('更新设备信息时发生错误');
+                }
+              }
+            },
+            child: const Text('保存'),
           ),
         ],
       ),
