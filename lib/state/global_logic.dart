@@ -31,6 +31,7 @@ class GlobalLogic extends GetxController {
                 connected: e.connected,
                 clientId: e.clientId,
                 address: e.address,
+                databaseName: e.databaseName,
               ),
             )
             .toList();

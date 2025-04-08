@@ -13,6 +13,7 @@ DeviceEntity _$DeviceEntityFromJson(Map<String, dynamic> json) => DeviceEntity(
   isSuperuser: json['isSuperuser'] as bool,
   connected: json['connected'] as bool,
   concentration: (json['concentration'] as num?)?.toDouble() ?? 0.0,
+  databaseName: json['databaseName'] as String,
 );
 
 Map<String, dynamic> _$DeviceEntityToJson(DeviceEntity instance) =>
@@ -22,5 +23,6 @@ Map<String, dynamic> _$DeviceEntityToJson(DeviceEntity instance) =>
       'address': instance.address,
       'isSuperuser': instance.isSuperuser,
       'connected': instance.connected,
+      'databaseName': instance.databaseName,
       'concentration': instance.concentration,
     };

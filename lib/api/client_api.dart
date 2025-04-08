@@ -51,4 +51,29 @@ class ClientApi {
       return null;
     });
   }
+
+  /// 删除客户端
+  /// [userId] 用户ID
+  /// [return] 是否删除成功
+  Future<bool> deleteUserToAuthenticator({
+    required String userId,
+    required String authenticator,
+  }) async {
+    Map<String, dynamic> params = {
+      "userId": userId,
+      "authenticator": authenticator,
+    };
+
+    return await _request
+        .delete("/auth/deleteUserToAuthenticator", params: params)
+        .then((value) {
+          final data = value.data;
+          if (data["code"] == 200) {
+            return true;
+          } else {
+            LoggerUtil.e("删除客户端失败");
+            return false;
+          }
+        });
+  }
 }

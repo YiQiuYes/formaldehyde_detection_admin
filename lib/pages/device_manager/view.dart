@@ -23,11 +23,13 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
     super.initState();
     logic.loadDevices(); // 加载设备数据
     logic.initWebSocket();
+    logic.initTimer(); // 启动刷新定时器
   }
 
   @override
   void dispose() {
     logic.closeWebSocket(); // 关闭 WebSocket 连接
+    state.refreshTimer?.cancel(); // 取消定时器
     super.dispose();
   }
 
@@ -63,6 +65,7 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
         // 跳转到设备详情页面
         Get.toNamed(RouteConfig.deviceDetail, arguments: device);
       },
+      onLongPress: () => _showDeleteDialog(device),  // 添加长按事件
       borderRadius: BorderRadius.circular(12),
       child: Card(
         margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
@@ -133,6 +136,29 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
           ),
         ),
       ),
+    );
+  }
+
+  // 新增删除确认对话框方法
+  void _showDeleteDialog(DeviceEntity device) {
+    Get.dialog(
+      AlertDialog(
+        title: const Text('删除设备'),
+        content: Text('确定要删除设备 ${device.address} 吗？'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(),
+            child: const Text('取消'),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              logic.deleteDevice(device.userId, device.databaseName);  // 调用删除逻辑
+            },
+            child: const Text('删除', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      )
     );
   }
 }

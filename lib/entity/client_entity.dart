@@ -13,6 +13,8 @@ class ClientEntity {
   bool isSuperuser;
   @JsonKey(name: "connected")
   bool connected;
+  @JsonKey(name: "databaseName")
+  String databaseName;
 
   ClientEntity({
     this.clientId,
@@ -20,6 +22,7 @@ class ClientEntity {
     this.address,
     required this.isSuperuser,
     required this.connected,
+    required this.databaseName,
   });
 
   factory ClientEntity.fromJson(Map<String, dynamic> json) => _$ClientEntityFromJson(json);
