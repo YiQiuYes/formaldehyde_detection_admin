@@ -5,7 +5,12 @@ import 'package:get/get.dart';
 class GlobalState {
   static final String storageUserData = "globalUserData";
   Rx<UserData> userData =
-      UserData(isLogin: false, token: null, refreshToken: null).obs;
+      UserData(
+        isLogin: false,
+        token: null,
+        refreshToken: null,
+        userName: null,
+      ).obs;
   // 设备列表数据
   RxList<DeviceEntity> devices = List<DeviceEntity>.empty().obs;
 }

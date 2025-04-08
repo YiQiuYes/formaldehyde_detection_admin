@@ -8,8 +8,10 @@ class UserLoginEntity {
   String? token;
   @JsonKey(name: "refreshToken")
   String? refreshToken;
+  @JsonKey(name: "userName")
+  String? userName;
 
-  UserLoginEntity({this.token, this.refreshToken});
+  UserLoginEntity({this.token, this.refreshToken, this.userName});
 
   factory UserLoginEntity.fromJson(Map<String, dynamic> json) =>
       _$UserLoginEntityFromJson(json);

@@ -72,4 +72,25 @@ class GlobalLogic extends GetxController {
       jsonEncode(state.userData.value.toJson()),
     );
   }
+
+  String? getUsername() {
+    return state.userData.value.userName;
+  }
+
+  void setUsername(String userName) {
+    state.userData.value.userName = userName;
+    StorageUtil.setString(
+      GlobalState.storageUserData,
+      jsonEncode(state.userData.value.toJson()),
+    );
+  }
+
+  void logout() {
+    // 清除用户凭证和数据
+    setToken('');
+    setRefreshToken('');
+    setLoginState(false);
+    setUsername('');
+    update();
+  }
 }

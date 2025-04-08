@@ -202,10 +202,10 @@ class DeviceDetailPage extends StatelessWidget {
       color = Colors.red;
     } else if (concentration > 300) {
       tip = '中度污染';
-      color = Colors.orange;
+      color = Colors.pinkAccent;
     } else if (concentration > 200) {
       tip = '轻度污染';
-      color = Colors.limeAccent;
+      color = Colors.orange;
     } else {
       tip = '空气良好';
       color = Colors.green;

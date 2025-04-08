@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:formaldehyde_detection/entity/ch2o_record_entity.dart';
 import 'package:formaldehyde_detection/pages/device_manager/state.dart';
 import 'package:formaldehyde_detection/state/global_logic.dart';
@@ -41,5 +42,17 @@ class DeviceManagerLogic extends GetxController {
   void closeWebSocket() {
     websocket.destroyHeartBeat();
     websocket.closeSocket();
+  }
+
+  Color getStatusColor(double concentration) {
+    if (concentration > 400) {
+      return Colors.red;
+    } else if (concentration > 300) {
+      return Colors.pinkAccent;
+    } else if (concentration > 200) {
+      return Colors.orange;
+    } else {
+      return Colors.green;
+    }
   }
 }

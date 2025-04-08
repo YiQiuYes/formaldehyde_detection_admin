@@ -120,15 +120,12 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
                 width: 24,
                 height: 24,
                 decoration: BoxDecoration(
-                  color:
-                      device.concentration > 0.1
-                          ? Theme.of(context).colorScheme.errorContainer
-                          : Theme.of(context).colorScheme.tertiaryContainer,
+                  color: Theme.of(context).colorScheme.tertiaryContainer,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.circle,
-                  color: device.concentration > 0.1 ? Colors.red : Colors.green,
+                  color: logic.getStatusColor(device.concentration),
                   size: 14,
                 ),
               ),

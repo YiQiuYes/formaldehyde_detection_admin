@@ -38,8 +38,9 @@ class LoginLogic extends GetxController {
         logic.setLoginState(true);
         logic.setToken(value.token!);
         logic.setRefreshToken(value.refreshToken!);
+        logic.setUsername(value.userName!);
 
-        Get.toNamed(RouteConfig.home);
+        Get.offAllNamed(RouteConfig.home);
       } else {
         ToastUtil.errorToastNoContent('登录失败');
       }

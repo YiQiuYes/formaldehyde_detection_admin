@@ -10,8 +10,10 @@ class UserData {
   String? token;
   @JsonKey(name: "refreshToken")
   String? refreshToken;
+  @JsonKey(name: "userName")
+  String? userName;
 
-  UserData({this.isLogin = false, this.token, this.refreshToken});
+  UserData({this.isLogin = false, this.token, this.refreshToken, this.userName});
 
   factory UserData.fromJson(Map<String, dynamic> json) =>
       _$UserDataFromJson(json);
