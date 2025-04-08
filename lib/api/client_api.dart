@@ -13,7 +13,7 @@ class ClientApi {
 
   final _request = RequestUtil();
 
-  Future<List<ClientEntity>> clientALLList({int? page, int? limit}) async {
+  Future<List<ClientEntity>> clientALLList() async {
     return await _request.get("/client/allList").then((value) {
       final data = value.data;
       List<ClientEntity> list = [];
