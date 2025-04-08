@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:formaldehyde_detection/entity/device_entity.dart';
 import 'package:formaldehyde_detection/pages/route_config.dart';
+import 'package:formaldehyde_detection/state/global_logic.dart';
 import 'package:get/get.dart';
 
 import 'logic.dart';
@@ -20,6 +22,13 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
   void initState() {
     super.initState();
     logic.loadDevices(); // 加载设备数据
+    logic.initWebSocket();
+  }
+
+  @override
+  void dispose() {
+    logic.closeWebSocket(); // 关闭 WebSocket 连接
+    super.dispose();
   }
 
   @override
@@ -33,13 +42,13 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
           ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
       ),
-      body: GetBuilder<DeviceManagerLogic>(
+      body: GetBuilder<GlobalLogic>(
         builder: (logic) {
           return ListView.builder(
             padding: const EdgeInsets.all(16),
-            itemCount: state.devices.length,
+            itemCount: logic.state.devices.length,
             itemBuilder: (content, index) {
-              final device = state.devices[index];
+              final device = logic.state.devices[index];
               return _buildDeviceItem(device, context);
             },
           );
@@ -48,11 +57,11 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
     );
   }
 
-  Widget _buildDeviceItem(Device device, BuildContext context) {
+  Widget _buildDeviceItem(DeviceEntity device, BuildContext context) {
     return InkWell(
       onTap: () {
         // 跳转到设备详情页面
-        Get.toNamed(RouteConfig.deviceDetail, arguments: device);
+        Get.toNamed(RouteConfig.deviceDetail);
       },
       borderRadius: BorderRadius.circular(12),
       child: Card(
@@ -69,7 +78,7 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
                 height: 48,
                 decoration: BoxDecoration(
                   color:
-                      device.isOnline
+                      device.connected
                           ? Theme.of(context).colorScheme.primaryContainer
                           : Theme.of(
                             context,
@@ -77,9 +86,9 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
-                  device.isOnline ? Icons.wifi : Icons.wifi_off,
+                  device.connected ? Icons.wifi : Icons.wifi_off,
                   color:
-                      device.isOnline
+                      device.connected
                           ? Theme.of(context).colorScheme.primary
                           : Theme.of(context).colorScheme.outline,
                   size: 28,
@@ -92,7 +101,7 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      device.address,
+                      device.address ?? '',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),

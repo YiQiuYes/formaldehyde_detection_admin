@@ -5,7 +5,7 @@ import 'logic.dart';
 import 'state.dart';
 
 class PersonPage extends StatelessWidget {
-  PersonPage({Key? key}) : super(key: key);
+  PersonPage({super.key});
 
   final PersonLogic logic = Get.put(PersonLogic());
   final PersonState state = Get.find<PersonLogic>().state;

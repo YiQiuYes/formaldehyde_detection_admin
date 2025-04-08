@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:formaldehyde_detection/api/client_api.dart';
+import 'package:formaldehyde_detection/entity/device_entity.dart';
 import 'package:formaldehyde_detection/state/user_data.dart';
 import 'package:formaldehyde_detection/utils/storage_util.dart';
 import 'package:get/get.dart';
@@ -8,6 +10,7 @@ import 'global_state.dart';
 
 class GlobalLogic extends GetxController {
   final GlobalState state = GlobalState();
+  final clientApi = ClientApi();
 
   void init() {
     // 初始化用户数据
@@ -15,6 +18,23 @@ class GlobalLogic extends GetxController {
     if (userDataStr != null) {
       state.userData.value = UserData.fromJson(jsonDecode(userDataStr));
     }
+  }
+
+  void loadDevices() async {
+    final result = await clientApi.clientALLList();
+    state.devices.value =
+        result
+            .map(
+              (e) => DeviceEntity(
+                userId: e.userId,
+                isSuperuser: e.isSuperuser,
+                connected: e.connected,
+                clientId: e.clientId,
+                address: e.address,
+              ),
+            )
+            .toList();
+    update();
   }
 
   bool getLoginState() {
