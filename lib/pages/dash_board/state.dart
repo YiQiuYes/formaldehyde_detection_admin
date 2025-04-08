@@ -1,6 +1,13 @@
+import 'dart:async';
+
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+
 class DashBoardState {
-  int onlineDevices = 8; // 示例在线数
-  int totalDevices = 15; // 示例设备总数
+  RxInt onlineDevices = 0.obs;
+  RxInt totalDevices = 0.obs;
+
+  // 刷新定时器
+  late Timer refreshTimer; 
   
   DashBoardState() {
     ///Initialize variables

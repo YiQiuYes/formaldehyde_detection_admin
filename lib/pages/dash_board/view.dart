@@ -4,11 +4,29 @@ import 'package:get/get.dart';
 import 'logic.dart';
 import 'state.dart';
 
-class DashBoardPage extends StatelessWidget {
-  DashBoardPage({super.key});
+class DashBoardPage extends StatefulWidget {
+  const DashBoardPage({super.key});
 
+  @override
+  State<DashBoardPage> createState() => _DashBoardPageState();
+}
+
+class _DashBoardPageState extends State<DashBoardPage> {
   final DashBoardLogic logic = Get.put(DashBoardLogic());
   final DashBoardState state = Get.find<DashBoardLogic>().state;
+
+  @override
+  void initState() {
+    super.initState();
+    logic.refreshDeviceStatus();
+    logic.initTimer(); // 启动刷新定时器
+  }
+
+  @override
+  void dispose() {
+    state.refreshTimer.cancel(); // 取消定时器
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,30 +56,34 @@ class DashBoardPage extends StatelessWidget {
   /// [context] 上下文
   /// [return] 设备状态卡片
   Widget _buildDeviceStatusCards(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildStatusCard(
-            context: context,
-            icon: Icons.wifi_find_rounded,
-            title: "在线设备",
-            value: "${state.onlineDevices}",
-            unit: "台",
-            color: Theme.of(context).colorScheme.primary,
-          ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: _buildStatusCard(
-            context: context,
-            icon: Icons.storage_rounded,
-            title: "设备总量",
-            value: "${state.totalDevices}",
-            unit: "台",
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-        ),
-      ],
+    return GetBuilder<DashBoardLogic>(
+      builder: (logic) {
+        return Row(
+          children: [
+            Expanded(
+              child: _buildStatusCard(
+                context: context,
+                icon: Icons.wifi_find_rounded,
+                title: "在线设备",
+                value: "${state.onlineDevices}",
+                unit: "台",
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildStatusCard(
+                context: context,
+                icon: Icons.storage_rounded,
+                title: "设备总量",
+                value: "${state.totalDevices}",
+                unit: "台",
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+            ),
+          ],
+        );
+      }
     );
   }
 
