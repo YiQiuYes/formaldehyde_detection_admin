@@ -21,4 +21,12 @@ class DeviceEntity extends ClientEntity {
 
   @override
   Map<String, dynamic> toJson() => _$DeviceEntityToJson(this);
+
+  void updateFrom(ClientEntity newData) {
+    userId = newData.userId;
+    isSuperuser = newData.isSuperuser;
+    connected = newData.connected;
+    address = newData.address;
+    databaseName = newData.databaseName;
+  }
 }

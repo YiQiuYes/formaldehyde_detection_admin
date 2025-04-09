@@ -22,19 +22,38 @@ class GlobalLogic extends GetxController {
 
   void loadDevices() async {
     final result = await clientApi.clientALLList();
+
+    // 创建新的设备映射表
+    final newDevicesMap = {for (var e in result) e.clientId: e};
+
+    // 更新现有设备数据
     state.devices.value =
-        result
-            .map(
-              (e) => DeviceEntity(
-                userId: e.userId,
-                isSuperuser: e.isSuperuser,
-                connected: e.connected,
-                clientId: e.clientId,
-                address: e.address,
-                databaseName: e.databaseName,
-              ),
-            )
-            .toList();
+        state.devices
+            .where((d) => newDevicesMap.containsKey(d.clientId)) // 保留仍存在的设备
+            .map((existing) {
+              final newData = newDevicesMap[existing.clientId]!;
+              return existing..updateFrom(newData); // 更新字段
+            })
+            .toList()
+          ..addAll(
+            result
+                .where(
+                  (e) =>
+                      !state.devices.any(
+                        (d) => d.clientId == e.clientId,
+                      ), // 添加新设备
+                )
+                .map(
+                  (e) => DeviceEntity(
+                    userId: e.userId,
+                    isSuperuser: e.isSuperuser,
+                    connected: e.connected,
+                    clientId: e.clientId,
+                    address: e.address,
+                    databaseName: e.databaseName,
+                  ),
+                ),
+          );
     update();
   }
 
