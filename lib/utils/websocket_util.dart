@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-const String _socketUrl = 'ws://192.168.123.150:8080/websocket';
+const String _socketUrl = 'ws://134.175.119.27:8015/websocket';
 
 /// WebSocket状态
 enum SocketStatus {

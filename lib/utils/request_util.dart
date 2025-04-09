@@ -17,7 +17,7 @@ class RequestUtil {
 
   /// 获取dio
   Dio getDio() {
-    _dio ??= Dio(BaseOptions(baseUrl: "http://192.168.123.150:8080"));
+    _dio ??= Dio(BaseOptions(baseUrl: "http://134.175.119.27:8015"));
     _addTokenInterceptor(_dio!);
     return _dio!;
   }
