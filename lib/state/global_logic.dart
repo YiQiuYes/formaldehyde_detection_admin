@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:formaldehyde_detection/api/client_api.dart';
@@ -18,6 +19,12 @@ class GlobalLogic extends GetxController {
     if (userDataStr != null) {
       state.userData.value = UserData.fromJson(jsonDecode(userDataStr));
     }
+
+    // 初始化定时器
+    state.refreshTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      // 刷新设备状态
+      loadDevices();
+    });
   }
 
   void loadDevices() async {

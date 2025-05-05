@@ -24,13 +24,11 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
     super.initState();
     logic.loadDevices(); // 加载设备数据
     logic.initWebSocket();
-    logic.initTimer(); // 启动刷新定时器
   }
 
   @override
   void dispose() {
     logic.closeWebSocket(); // 关闭 WebSocket 连接
-    state.refreshTimer?.cancel(); // 取消定时器
     super.dispose();
   }
 

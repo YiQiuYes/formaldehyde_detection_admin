@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:formaldehyde_detection/entity/device_entity.dart';
 import 'package:formaldehyde_detection/state/user_data.dart';
 import 'package:get/get.dart';
@@ -13,4 +15,6 @@ class GlobalState {
       ).obs;
   // 设备列表数据
   RxList<DeviceEntity> devices = List<DeviceEntity>.empty().obs;
+  // 刷新定时器
+  Timer? refreshTimer;
 }

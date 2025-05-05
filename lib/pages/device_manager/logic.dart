@@ -18,14 +18,6 @@ class DeviceManagerLogic extends GetxController {
   final websocket = WebSocketUtil();
   final clientApi = ClientApi();
 
-  void initTimer() {
-    // 初始化定时器
-    state.refreshTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
-      // 刷新设备状态
-      loadDevices();
-    });
-  }
-
   void loadDevices() {
     // 加载设备数据
     globalLogic.loadDevices();
