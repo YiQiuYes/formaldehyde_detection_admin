@@ -33,18 +33,15 @@ jobs:
         env:
           SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
         run: echo $SIGNING_KEY | base64 -d > android/app/key.jks
-      - name: 缓存android sdk
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-            /usr/local/lib/android/sdk
-          key: $${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
       - name: 设置flutter编译环境
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION  }}
+          cache: true
+          cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}
+          cache-path: ${{ runner.tool_cache }}/flutter
+          pub-cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-pub-cache
+          pub-cache-path: ${{ runner.tool_cache }}/flutter
       - name: 执行编译命令分架构
         run: |
           flutter pub get
@@ -89,6 +86,8 @@ jobs:
           cache: true
           cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}
           cache-path: ${{ runner.tool_cache }}/flutter
+          pub-cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-pub-cache
+          pub-cache-path: ${{ runner.tool_cache }}/flutter
       - name: Build (ios)
         run: |
           flutter pub get
