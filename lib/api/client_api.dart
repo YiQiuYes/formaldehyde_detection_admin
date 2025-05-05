@@ -90,6 +90,9 @@ class ClientApi {
     required String authenticator,
     required bool isSuperuser,
     required String address,
+    required double safe,
+    required double warn,
+    required double danger,
   }) async {
     Map<String, dynamic> data = {
       "username": userId,
@@ -97,6 +100,9 @@ class ClientApi {
       "authenticator": authenticator,
       "isSuperuser": isSuperuser,
       "address": address,
+      "safe": safe,
+      "warn": warn,
+      "danger": danger,
     };
 
     return await _request
@@ -138,6 +144,9 @@ class ClientApi {
     required String newAddress,
     required bool newIsSuperuser,
     required String newPassword,
+    required double safe,
+    required double warn,
+    required double danger,
   }) async {
     Map<String, dynamic> data = {
       "authenticator": authenticator,
@@ -145,6 +154,9 @@ class ClientApi {
       "password": newPassword,
       "isSuperuser": newIsSuperuser,
       "address": newAddress,
+      "safe": safe,
+      "warn": warn,
+      "danger": danger,
     };
     return await _request
         .post("/auth/updateUserToAuthenticator", data: data)

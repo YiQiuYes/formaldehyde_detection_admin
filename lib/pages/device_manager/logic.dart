@@ -92,6 +92,9 @@ class DeviceManagerLogic extends GetxController {
     required String authenticator,
     required bool isSuperuser,
     required String address,
+    required double safe,
+    required double warn,
+    required double danger,
   }) async {
     final success = await clientApi.registerClient(
       userId: userId,
@@ -99,6 +102,9 @@ class DeviceManagerLogic extends GetxController {
       authenticator: authenticator,
       isSuperuser: isSuperuser,
       address: address,
+      safe: safe,
+      warn: warn,
+      danger: danger,
     );
 
     if (success) {
@@ -121,6 +127,9 @@ class DeviceManagerLogic extends GetxController {
     required String newAddress,
     required bool newIsSuperuser,
     required String newPassword,
+    required double safe,
+    required double warn,
+    required double danger,
   }) async {
     final success = await clientApi.updateDevice(
       authenticator: device.databaseName,
@@ -128,6 +137,9 @@ class DeviceManagerLogic extends GetxController {
       newAddress: newAddress,
       newIsSuperuser: newIsSuperuser,
       newPassword: newPassword,
+      safe: safe,
+      warn: warn,
+      danger: danger,
     );
 
     if (success) {
@@ -135,5 +147,16 @@ class DeviceManagerLogic extends GetxController {
       return true;
     }
     return false;
+  }
+
+  String? validateThreshold(String? value) {
+    if (value == null || value.isEmpty) {
+      return '请输入阈值';
+    }
+    final numValue = num.tryParse(value);
+    if (numValue == null || numValue < 0) {
+      return '请输入有效的阈值';
+    }
+    return null;
   }
 }

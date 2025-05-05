@@ -172,6 +172,9 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
     String? selectedAuthenticator; // 改为存储选中值
     RxBool isSuperuser = false.obs;
     String address = '';
+    double safeValue = 0.50;
+    double warnValue = 1.00;
+    double dangerValue = 2.00;
 
     // 初始化加载认证器列表
     await logic.loadAuthenticators();
@@ -225,6 +228,30 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
                   onSaved: (v) => address = v ?? '',
                   validator: (v) => v?.isEmpty ?? true ? '必填字段' : null,
                 ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: '安全值 (mg/m³)'),
+                  keyboardType: TextInputType.number,
+                  initialValue: '0.50',
+                  onSaved:
+                      (v) => safeValue = double.tryParse(v ?? '0.50') ?? 0.50,
+                  validator: (v) => logic.validateThreshold(v),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: '警告值 (mg/m³)'),
+                  keyboardType: TextInputType.number,
+                  initialValue: '1.00',
+                  onSaved:
+                      (v) => warnValue = double.tryParse(v ?? '1.00') ?? 1.00,
+                  validator: (v) => logic.validateThreshold(v),
+                ),
+                TextFormField(
+                  decoration: const InputDecoration(labelText: '危险值 (mg/m³)'),
+                  keyboardType: TextInputType.number,
+                  initialValue: '2.00',
+                  onSaved:
+                      (v) => dangerValue = double.tryParse(v ?? '2.00') ?? 2.00,
+                  validator: (v) => logic.validateThreshold(v),
+                ),
                 Row(
                   children: [
                     const Text('超级用户'),
@@ -257,6 +284,9 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
                   authenticator: selectedAuthenticator!,
                   isSuperuser: isSuperuser.value,
                   address: address,
+                  safe: safeValue,
+                  warn: warnValue,
+                  danger: dangerValue,
                 );
                 if (success) {
                   Get.back();
@@ -305,6 +335,9 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
     String address = device.address ?? '';
     RxBool isSuperuser = device.isSuperuser.obs;
     String password = '';
+    double safeValue = device.safe;
+    double warnValue = device.warn;
+    double dangerValue = device.danger;
 
     Get.dialog(
       AlertDialog(
@@ -326,6 +359,30 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
                   decoration: const InputDecoration(labelText: '设备地址'),
                   onSaved: (v) => address = v ?? '',
                   validator: (v) => v?.isEmpty ?? true ? '必填字段' : null,
+                ),
+                TextFormField(
+                  initialValue: safeValue.toString(),
+                  decoration: const InputDecoration(labelText: '安全值 (mg/m³)'),
+                  keyboardType: TextInputType.number,
+                  onSaved:
+                      (v) => safeValue = double.tryParse(v ?? '0.50') ?? 0.50,
+                  validator: (v) => logic.validateThreshold(v),
+                ),
+                TextFormField(
+                  initialValue: warnValue.toString(),
+                  decoration: const InputDecoration(labelText: '警告值 (mg/m³)'),
+                  keyboardType: TextInputType.number,
+                  onSaved:
+                      (v) => warnValue = double.tryParse(v ?? '1.00') ?? 1.00,
+                  validator: (v) => logic.validateThreshold(v),
+                ),
+                TextFormField(
+                  initialValue: dangerValue.toString(),
+                  decoration: const InputDecoration(labelText: '危险值 (mg/m³)'),
+                  keyboardType: TextInputType.number,
+                  onSaved:
+                      (v) => dangerValue = double.tryParse(v ?? '2.00') ?? 2.00,
+                  validator: (v) => logic.validateThreshold(v),
                 ),
                 Obx(
                   () => CheckboxListTile(
@@ -349,9 +406,15 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
                   newAddress: address,
                   newIsSuperuser: isSuperuser.value,
                   newPassword: password,
+                  safe: safeValue,
+                  warn: warnValue,
+                  danger: dangerValue,
                 );
                 if (success) {
                   Get.back();
+                  device.safe = safeValue;
+                  device.warn = warnValue;
+                  device.danger = dangerValue;
                   ToastUtil.okToastNoContent('设备信息已更新');
                   logic.loadDevices();
                 } else {
