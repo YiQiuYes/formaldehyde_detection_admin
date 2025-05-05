@@ -6,6 +6,9 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 
+const String _requestUrl = 'http://134.175.119.27:8015';
+// const String _requestUrl = 'http://192.168.2.105:8080';
+
 class RequestUtil {
   RequestUtil._privateConstructor();
 
@@ -19,7 +22,7 @@ class RequestUtil {
 
   /// 获取dio
   Dio getDio() {
-    _dio ??= Dio(BaseOptions(baseUrl: "http://134.175.119.27:8015"));
+    _dio ??= Dio(BaseOptions(baseUrl: _requestUrl));
     _addTokenInterceptor(_dio!);
     _addLoginInvalidInterceptor(_dio!);
     return _dio!;
