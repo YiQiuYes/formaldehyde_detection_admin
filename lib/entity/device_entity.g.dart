@@ -14,6 +14,9 @@ DeviceEntity _$DeviceEntityFromJson(Map<String, dynamic> json) => DeviceEntity(
   connected: json['connected'] as bool,
   concentration: (json['concentration'] as num?)?.toDouble() ?? 0.0,
   databaseName: json['databaseName'] as String,
+  safe: (json['safe'] as num).toDouble(),
+  warn: (json['warn'] as num).toDouble(),
+  danger: (json['danger'] as num).toDouble(),
 );
 
 Map<String, dynamic> _$DeviceEntityToJson(DeviceEntity instance) =>
@@ -24,5 +27,8 @@ Map<String, dynamic> _$DeviceEntityToJson(DeviceEntity instance) =>
       'isSuperuser': instance.isSuperuser,
       'connected': instance.connected,
       'databaseName': instance.databaseName,
+      'safe': instance.safe,
+      'warn': instance.warn,
+      'danger': instance.danger,
       'concentration': instance.concentration,
     };

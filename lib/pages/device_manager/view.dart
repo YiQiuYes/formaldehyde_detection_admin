@@ -133,7 +133,7 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
                 ),
                 child: Icon(
                   Icons.circle,
-                  color: logic.getStatusColor(device.concentration),
+                  color: logic.getStatusColor(device),
                   size: 14,
                 ),
               ),

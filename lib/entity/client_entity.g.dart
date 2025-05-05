@@ -13,6 +13,9 @@ ClientEntity _$ClientEntityFromJson(Map<String, dynamic> json) => ClientEntity(
   isSuperuser: json['isSuperuser'] as bool,
   connected: json['connected'] as bool,
   databaseName: json['databaseName'] as String,
+  safe: (json['safe'] as num).toDouble(),
+  warn: (json['warn'] as num).toDouble(),
+  danger: (json['danger'] as num).toDouble(),
 );
 
 Map<String, dynamic> _$ClientEntityToJson(ClientEntity instance) =>
@@ -23,4 +26,7 @@ Map<String, dynamic> _$ClientEntityToJson(ClientEntity instance) =>
       'isSuperuser': instance.isSuperuser,
       'connected': instance.connected,
       'databaseName': instance.databaseName,
+      'safe': instance.safe,
+      'warn': instance.warn,
+      'danger': instance.danger,
     };

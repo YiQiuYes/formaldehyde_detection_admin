@@ -15,6 +15,9 @@ class DeviceEntity extends ClientEntity {
     required super.connected,
     this.concentration = 0.0,
     required super.databaseName,
+    required super.safe,
+    required super.warn,
+    required super.danger,
   });
 
   factory DeviceEntity.fromJson(Map<String, dynamic> json) => _$DeviceEntityFromJson(json);

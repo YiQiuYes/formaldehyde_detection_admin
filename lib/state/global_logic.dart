@@ -51,6 +51,9 @@ class GlobalLogic extends GetxController {
                     clientId: e.clientId,
                     address: e.address,
                     databaseName: e.databaseName,
+                    safe: e.safe,
+                    warn: e.warn,
+                    danger: e.danger,
                   ),
                 ),
           );

@@ -15,6 +15,12 @@ class ClientEntity {
   bool connected;
   @JsonKey(name: "databaseName")
   String databaseName;
+  @JsonKey(name: "safe")
+  double safe;
+  @JsonKey(name: "warn")
+  double warn;
+  @JsonKey(name: "danger")
+  double danger;
 
   ClientEntity({
     this.clientId,
@@ -23,6 +29,9 @@ class ClientEntity {
     required this.isSuperuser,
     required this.connected,
     required this.databaseName,
+    required this.safe,
+    required this.warn,
+    required this.danger,
   });
 
   factory ClientEntity.fromJson(Map<String, dynamic> json) => _$ClientEntityFromJson(json);

@@ -57,12 +57,10 @@ class DeviceManagerLogic extends GetxController {
     websocket.closeSocket();
   }
 
-  Color getStatusColor(double concentration) {
-    if (concentration > 400) {
+  Color getStatusColor(DeviceEntity device) {
+    if (device.concentration > device.warn) {
       return Colors.red;
-    } else if (concentration > 300) {
-      return Colors.pinkAccent;
-    } else if (concentration > 200) {
+    } else if (device.concentration > device.safe) {
       return Colors.orange;
     } else {
       return Colors.green;

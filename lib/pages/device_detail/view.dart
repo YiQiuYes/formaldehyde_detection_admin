@@ -61,22 +61,22 @@ class DeviceDetailPage extends StatelessWidget {
                             axes: [
                               RadialAxis(
                                 minimum: 0,
-                                maximum: 500,
-                                interval: 100,
+                                maximum: device.danger,
+                                interval: (device.danger - device.safe) / 4,
                                 ranges: [
                                   GaugeRange(
                                     startValue: 0,
-                                    endValue: 200,
+                                    endValue: device.safe,
                                     color: Colors.green,
                                   ),
                                   GaugeRange(
-                                    startValue: 200,
-                                    endValue: 400,
+                                    startValue: device.safe,
+                                    endValue: device.warn,
                                     color: Colors.orange,
                                   ),
                                   GaugeRange(
-                                    startValue: 400,
-                                    endValue: 500,
+                                    startValue: device.warn,
+                                    endValue: device.danger,
                                     color: Colors.red,
                                   ),
                                 ],
