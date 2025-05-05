@@ -54,6 +54,9 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION  }}
+          cache: true
+          cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}
+          cache-path: ${{ runner.tool_cache }}/flutter
       - name: 执行编译命令分架构
         run: |
           flutter pub get
@@ -92,6 +95,13 @@ jobs:
       - name: 修改版本号
         run: |
           sed -i "" "s/version: .*/version: ${{ env.version }}+1/" pubspec.yaml
+      - name: 编译环境设置
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION  }}
+          cache: true
+          cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}
+          cache-path: ${{ runner.tool_cache }}/flutter
       - name: Build (ios)
         run: |
           flutter pub get
