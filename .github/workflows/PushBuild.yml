@@ -40,8 +40,6 @@ jobs:
           cache: true
           cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}
           cache-path: ${{ runner.tool_cache }}/flutter
-          pub-cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-pub-cache
-          pub-cache-path: ${{ runner.tool_cache }}/flutter
       - name: 执行编译命令分架构
         run: |
           flutter pub get
@@ -86,8 +84,6 @@ jobs:
           cache: true
           cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}
           cache-path: ${{ runner.tool_cache }}/flutter
-          pub-cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}-pub-cache
-          pub-cache-path: ${{ runner.tool_cache }}/flutter
       - name: Build (ios)
         run: |
           flutter pub get
