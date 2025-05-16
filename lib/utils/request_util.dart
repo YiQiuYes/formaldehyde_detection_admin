@@ -150,8 +150,11 @@ class RequestUtil {
             final logic = Get.find<GlobalLogic>();
             String? refreshToken = logic.getRefreshToken();
             if (refreshToken == null) {
-              // 跳转到登录页面
-              Get.offAllNamed(RouteConfig.login);
+              // 判断当前是否为登录页面，如果是则不跳转
+              if (Get.currentRoute != RouteConfig.login) {
+                // 跳转到登录页面
+                Get.offAllNamed(RouteConfig.login);
+              }
               return handler.next(response);
             }
 
@@ -193,8 +196,11 @@ class RequestUtil {
 
                 handler.resolve(retryResponse);
               } else {
-                // 跳转到登录页面
-                Get.offAllNamed(RouteConfig.login);
+                // 判断当前是否为登录页面，如果是则不跳转
+                if (Get.currentRoute != RouteConfig.login) {
+                  // 跳转到登录页面
+                  Get.offAllNamed(RouteConfig.login);
+                }
               }
             });
           }
