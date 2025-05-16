@@ -54,9 +54,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION  }}
-          cache: true
-          cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}
-          cache-path: ${{ runner.tool_cache }}/flutter
       - name: 执行编译命令分架构
         run: |
           flutter pub get
@@ -99,9 +96,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION  }}
-          cache: true
-          cache-key: flutter-${{ runner.os }}-${{ env.FLUTTER_VERSION }}
-          cache-path: ${{ runner.tool_cache }}/flutter
       - name: Build (ios)
         run: |
           flutter pub get
