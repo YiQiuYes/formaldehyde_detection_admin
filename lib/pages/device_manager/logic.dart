@@ -50,9 +50,10 @@ class DeviceManagerLogic extends GetxController {
   }
 
   Color getStatusColor(DeviceEntity device) {
-    if (device.concentration > device.warn) {
+    double concentration = device.concentration / 1000;
+    if (concentration > device.warn) {
       return Colors.red;
-    } else if (device.concentration > device.safe) {
+    } else if (concentration > device.safe) {
       return Colors.orange;
     } else {
       return Colors.green;

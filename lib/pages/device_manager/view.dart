@@ -114,7 +114,7 @@ class _DeviceManagerPageState extends State<DeviceManagerPage> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '浓度 ${device.concentration.toStringAsFixed(2)} mg/m³',
+                      '浓度 ${(device.concentration / 1000).toStringAsFixed(2)} mg/m³',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context).colorScheme.onSurfaceVariant,
                       ),

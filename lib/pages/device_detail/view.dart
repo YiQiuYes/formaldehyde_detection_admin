@@ -114,7 +114,7 @@ class DeviceDetailPage extends StatelessWidget {
                               device,
                               globalLogic.state.devices,
                             );
-                        return _buildStatusIndicator(context, concentration);
+                        return _buildStatusIndicator(context, concentration, device);
                       },
                     ),
                   ],
@@ -155,7 +155,7 @@ class DeviceDetailPage extends StatelessWidget {
                             _buildStatItem(
                               context,
                               '最高浓度',
-                              state.ch2oTodayStatistic.value.max
+                              (state.ch2oTodayStatistic.value.max / 1000)
                                   .toStringAsFixed(2),
                               Icons.arrow_upward,
                               Colors.red,
@@ -163,7 +163,7 @@ class DeviceDetailPage extends StatelessWidget {
                             _buildStatItem(
                               context,
                               '平均浓度',
-                              state.ch2oTodayStatistic.value.avg
+                              (state.ch2oTodayStatistic.value.avg / 1000)
                                   .toStringAsFixed(2),
                               Icons.trending_flat,
                               Colors.orange,
@@ -171,7 +171,7 @@ class DeviceDetailPage extends StatelessWidget {
                             _buildStatItem(
                               context,
                               '最低浓度',
-                              state.ch2oTodayStatistic.value.min
+                              (state.ch2oTodayStatistic.value.min / 1000)
                                   .toStringAsFixed(2),
                               Icons.arrow_downward,
                               Colors.green,
@@ -194,18 +194,15 @@ class DeviceDetailPage extends StatelessWidget {
   ///
   /// [context] 上下文
   /// [return] 状态指示器
-  Widget _buildStatusIndicator(BuildContext context, double concentration) {
+  Widget _buildStatusIndicator(BuildContext context, double concentration, DeviceEntity device) {
     String tip = '良好';
     Color color = Colors.green;
-    if (concentration > 400) {
+    if (concentration > device.warn) {
       tip = '重度污染';
       color = Colors.red;
-    } else if (concentration > 300) {
+    } else if (concentration > device.safe) {
       tip = '中度污染';
       color = Colors.pinkAccent;
-    } else if (concentration > 200) {
-      tip = '轻度污染';
-      color = Colors.orange;
     } else {
       tip = '空气良好';
       color = Colors.green;

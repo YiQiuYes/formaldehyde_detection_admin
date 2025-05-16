@@ -17,7 +17,7 @@ class DeviceDetailLogic extends GetxController {
   ) {
     return devices.firstWhere((element) {
       return element.clientId == device.clientId;
-    }).concentration;
+    }).concentration / 1000.0;
   }
 
   /// 加载今日统计数据
