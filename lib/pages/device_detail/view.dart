@@ -114,7 +114,11 @@ class DeviceDetailPage extends StatelessWidget {
                               device,
                               globalLogic.state.devices,
                             );
-                        return _buildStatusIndicator(context, concentration, device);
+                        return _buildStatusIndicator(
+                          context,
+                          concentration,
+                          device,
+                        );
                       },
                     ),
                   ],
@@ -184,6 +188,59 @@ class DeviceDetailPage extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(height: 24),
+            // 模拟数据操作按钮组
+            Card(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    const Text(
+                      '模拟数据',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => logic.simulateData(device, 'close'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey,
+                          ),
+                          child: const Text('关闭'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => logic.simulateData(device, 'safe'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                          ),
+                          child: const Text('安全'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => logic.simulateData(device, 'warn'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.orange,
+                          ),
+                          child: const Text('警告'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => logic.simulateData(device, 'danger'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          child: const Text('危险'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -194,7 +251,11 @@ class DeviceDetailPage extends StatelessWidget {
   ///
   /// [context] 上下文
   /// [return] 状态指示器
-  Widget _buildStatusIndicator(BuildContext context, double concentration, DeviceEntity device) {
+  Widget _buildStatusIndicator(
+    BuildContext context,
+    double concentration,
+    DeviceEntity device,
+  ) {
     String tip = '良好';
     Color color = Colors.green;
     if (concentration > device.warn) {
